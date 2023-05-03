@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import { v4 as uuidv4 } from 'uuid';
 import { db } from '@/firebase'
 import { collection, onSnapshot, addDoc } from 'firebase/firestore'
 
@@ -9,12 +8,10 @@ const todos = ref([])
 const newToDoContent = ref('')
 
 const addTodo = () => {
-  const newToDo = {
-    id: uuidv4(),
+  addDoc(collection(db, 'todos'), {
     content: newToDoContent.value,
     done: false
-  }
-  todos.value.unshift(newToDo)
+  })
   newToDoContent.value = ''
 }
 
