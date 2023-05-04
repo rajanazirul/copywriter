@@ -9,7 +9,7 @@ const cwStore = useCopywritingStore()
 
 const attentionsCollectionRef = collection(db, 'attentions')
 
-const store = useAttentionsStore()
+const attentionStore = useAttentionsStore()
 
 const alert = ref()
 const dialog = ref(false)
@@ -32,7 +32,7 @@ const checkCw = () => {
 
 // Get attentions
 onMounted(() => {
-  store.getAttentions()
+  attentionStore.getAttentions()
 })
 </script>
 
@@ -52,7 +52,7 @@ onMounted(() => {
         </v-card>
       </v-dialog>
     </div>
-    <!-- <div v-for="todo in store.attentions" class="d-flex align-center flex-column">
+    <div v-for="todo in attentionStore.attentions" class="d-flex align-center flex-column">
       <div>
         <v-card width="400" :title=todo.id>
           <v-col cols="auto">
@@ -61,7 +61,7 @@ onMounted(() => {
           </v-col>
         </v-card>
       </div>
-    </div> -->
+    </div>
 
     <div class="grid h-screen place-items-center">
 
