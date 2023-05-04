@@ -167,28 +167,28 @@ const actionsCollectionQuery = query(actionsCollectionRef, orderBy('date', 'desc
 
 onMounted(() => {
   onSnapshot(attentionsCollectionQuery, (querySnapshot) => {
-    const fbattentions: Array<object> = []
+    const fbattentions: any= []
     querySnapshot.forEach((doc) => {
       fbattentions.push(doc.data().content)
     })
     attentionSelect.value = fbattentions
   }),
   onSnapshot(interestsCollectionQuery, (querySnapshot) => {
-    const fbattentions: Array<object> = []
+    const fbattentions: any = []
     querySnapshot.forEach((doc) => {
       fbattentions.push(doc.data().content)
     })
     interestSelect.value = fbattentions
   }),
   onSnapshot(desiresCollectionQuery, (querySnapshot) => {
-    const fbattentions: Array<object> = []
+    const fbattentions: any = []
     querySnapshot.forEach((doc) => {
       fbattentions.push(doc.data().content)
     })
     desireSelect.value = fbattentions
   }),
   onSnapshot(actionsCollectionQuery, (querySnapshot) => {
-    const fbattentions: Array<object> = []
+    const fbattentions: any = []
     querySnapshot.forEach((doc) => {
       fbattentions.push(doc.data().content)
     })

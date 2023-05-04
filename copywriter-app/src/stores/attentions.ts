@@ -10,7 +10,7 @@ export const useAttentionsStore = defineStore({
   getters: {
     attentionContent: (state) => {
       const data: Array<object> = []
-      state.attentions.forEach((doc) => {
+      state.attentions.forEach((doc: any) => {
         data.push(doc.content)
       })
       return data
@@ -22,8 +22,8 @@ export const useAttentionsStore = defineStore({
       const attentionsCollectionQuery = query(attentionsCollectionRef, orderBy('date', 'desc'), limit(9))
 
       onSnapshot(attentionsCollectionQuery, (querySnapshot) => {
-        const fbattentions: Array<object> = []
-        querySnapshot.forEach((doc) => {
+        const fbattentions: any = []
+        querySnapshot.forEach((doc: any) => {
           const attention = {
             id: doc.id,
             content: doc.data().content,

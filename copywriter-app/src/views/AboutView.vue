@@ -17,7 +17,7 @@ const dialog1 = ref(false)
 
 const content = ref('')
 
-const deleteContent = id => {
+const deleteContent = (id:any) => {
   deleteDoc(doc(attentionsCollectionRef, id))
 }
 
