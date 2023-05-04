@@ -1,77 +1,121 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, reactive } from 'vue';
 import { db } from '@/firebase'
-import { collection, onSnapshot, addDoc } from 'firebase/firestore'
+import { useVuelidate } from '@vuelidate/core'
+import { email, required, helpers } from '@vuelidate/validators'
+import { collection, onSnapshot, addDoc, deleteDoc, doc, updateDoc, query, orderBy, limit } from 'firebase/firestore'
 
-const todos = ref([])
 
-const newToDoContent = ref('')
+// code block for form
+const required$ = helpers.withMessage('Sila isi ruang yang berwarna merah!', required)
 
-const addTodo = () => {
-  addDoc(collection(db, 'todos'), {
-    content: newToDoContent.value,
-    done: false
-  })
-  newToDoContent.value = ''
+const initialState = {
+  name: '',
+  group: '',
+  select: null,
 }
 
-const deleteTodo = id => {
-  todos.value = todos.value.filter(todo => todo.id !== id)
-}
-
-const toggleDone = id => {
-  const index = todos.value.findIndex(todo => todo.id === id)
-  todos.value[index].done = !todos.value[index].done
-}
-
-// Get Todos
-onMounted(() => {
-  onSnapshot(collection(db, 'todos'), (querySnapshot) => {
-    const fbTodos = []
-    querySnapshot.forEach((doc) => {
-      const todo = {
-        id: doc.id,
-        content: doc.data().content,
-        done: doc.data().done
-      }
-      fbTodos.push(todo)
-    })
-    todos.value = fbTodos
-  })
+const state = reactive({
+  ...initialState,
 })
 
+const items = ref([
+  'Item 1',
+  'Item 2',
+  'Item 3',
+  'Item 4',
+])
 
+const rules = {
+  name: { required$ },
+  group: { required$ },
+  select: { required$ },
+  items: { required$ },
+}
+
+const v$ = useVuelidate(rules, state)
+
+function clear() {
+  v$.value.$reset()
+
+  for (const [key, value] of Object.entries(initialState)) {
+    state[key] = value
+  }
+}
 </script>
+
 
 <template>
   <main>
-    <div class="columns">
-      <v-form @submit.prevent="addTodo">
-        <v-text-field label="Label" v-model="newToDoContent"></v-text-field>
-        <v-btn type="submit" :disabled="!newToDoContent">
-          Add
+    <div class="home">
+      <form>
+        <v-text-field v-model="state.name" :error-messages="v$.name.$errors.map(e => e.$message)" s
+          label="Pengguna" required @input="v$.name.$touch" @blur="v$.name.$touch"></v-text-field>
+
+        <v-text-field v-model="state.group" :error-messages="v$.group.$errors.map(e => e.$message)" label="Nama Kumpulan"
+          required @input="v$.group.$touch" @blur="v$.group.$touch"></v-text-field>
+
+        <v-select v-model="state.select" :items="items" :error-messages="v$.select.$errors.map(e => e.$message)"
+          label="Kategori Jualan" required @change="v$.select.$touch" @blur="v$.select.$touch"></v-select>
+
+        <v-card width="600" title="A - ATTENTION [PERHATIAN]" subtitle="(Ayat menangkap minat pembaca)">
+          <textarea id="message" rows="4"
+            class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            :placeholder="items[0]"></textarea>
+        </v-card>
+
+        <v-btn class="me-4 mx-4 my-4" @click="v$.$validate">
+          Simpan
+        </v-btn>
+        <v-btn @click="clear">
+          Kosongkan
         </v-btn>
 
-      </v-form>
-    </div>
 
-
-    <div v-for="todo in todos" class="d-flex align-center flex-column">
-
-      <div class="text-subtitle-2">{{ todo.content }}</div>
-
-      <div>
-        <v-card width="400" :title=todo.content
-          :class="{ 'text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4': todo.done }">
-          <v-col cols="auto">
-            <button type="button" @click="toggleDone(todo.id)"
-              class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 ">Done</button>
-            <button type="button" @click="deleteTodo(todo.id)"
-              class="text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 shadow-lg shadow-green-500/50 dark:shadow-lg dark:shadow-green-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">Remove</button>
-          </v-col>
+        <v-card width="600" title="I - INTEREST [MINAT]" subtitle="(Ayat untuk menarik minat orang membaca iklan anda)">
+          <textarea id="message" rows="4"
+            class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            :placeholder="items[0]"></textarea>
         </v-card>
-      </div>
 
+
+        <v-btn class="me-4 mx-4 my-4" @click="v$.$validate">
+          Simpan
+        </v-btn>
+        <v-btn @click="clear">
+          Kosongkan
+        </v-btn>
+
+
+        <v-card width="600" title="D - DESIRE [KEINGINAN]" subtitle="(Ayat untuk menarik pembaca membeli produk anda)">
+          <textarea id="message" rows="4"
+            class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            :placeholder="items[0]"></textarea>
+        </v-card>
+
+
+        <v-btn class="me-4 mx-4 my-4" @click="v$.$validate">
+          Simpan
+        </v-btn>
+        <v-btn @click="clear">
+          Kosongkan
+        </v-btn>
+
+
+        <v-card width="600" title="A - ACTION [TINDAKAN]" subtitle="(Maklumat mengenai cara membuat pembelian)">
+          <textarea id="message" rows="4"
+            class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            :placeholder="items[0]"></textarea>
+        </v-card>
+
+
+        <v-btn class="me-4 mx-4 my-4" @click="v$.$validate">
+          Simpan
+        </v-btn>
+        <v-btn @click="clear">
+          Kosongkan
+        </v-btn>
+      </form>
     </div>
 
   </main>
