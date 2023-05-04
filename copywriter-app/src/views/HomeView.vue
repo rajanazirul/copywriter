@@ -64,10 +64,10 @@ function clear() {
             :placeholder="items[0]"></textarea>
         </v-card>
 
-        <v-btn class="me-4 mx-4 my-4" @click="v$.$validate">
+        <v-btn class="me-4 mx-4 my-4 inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800" @click="v$.$validate">
           Simpan
         </v-btn>
-        <v-btn @click="clear">
+        <v-btn class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-red-700 rounded-lg focus:ring-4 focus:ring-red-200 dark:focus:ring-red-900 hover:bg-red-800" @click="clear">
           Kosongkan
         </v-btn>
 
@@ -79,10 +79,10 @@ function clear() {
         </v-card>
 
 
-        <v-btn class="me-4 mx-4 my-4" @click="v$.$validate">
+        <v-btn class="me-4 mx-4 my-4 inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800" @click="v$.$validate">
           Simpan
         </v-btn>
-        <v-btn @click="clear">
+        <v-btn class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-red-700 rounded-lg focus:ring-4 focus:ring-red-200 dark:focus:ring-red-900 hover:bg-red-800" @click="clear">
           Kosongkan
         </v-btn>
 
@@ -94,10 +94,10 @@ function clear() {
         </v-card>
 
 
-        <v-btn class="me-4 mx-4 my-4" @click="v$.$validate">
+        <v-btn class="me-4 mx-4 my-4 inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800" @click="v$.$validate">
           Simpan
         </v-btn>
-        <v-btn @click="clear">
+        <v-btn class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-red-700 rounded-lg focus:ring-4 focus:ring-red-200 dark:focus:ring-red-900 hover:bg-red-800" @click="clear">
           Kosongkan
         </v-btn>
 
@@ -109,10 +109,10 @@ function clear() {
         </v-card>
 
 
-        <v-btn class="me-4 mx-4 my-4" @click="v$.$validate">
+        <v-btn class="me-4 mx-4 my-4 inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800" @click="v$.$validate">
           Simpan
         </v-btn>
-        <v-btn @click="clear">
+        <v-btn class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-red-700 rounded-lg focus:ring-4 focus:ring-red-200 dark:focus:ring-red-900 hover:bg-red-800" @click="clear">
           Kosongkan
         </v-btn>
       </form>
