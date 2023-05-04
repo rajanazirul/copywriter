@@ -2,20 +2,25 @@
 import { ref, onMounted, reactive } from 'vue';
 import { db } from '@/firebase'
 import { useVuelidate } from '@vuelidate/core'
-import { email, required, helpers } from '@vuelidate/validators'
+import { required, helpers } from '@vuelidate/validators'
 import { collection, onSnapshot, addDoc, deleteDoc, doc, updateDoc, query, orderBy, limit } from 'firebase/firestore'
 
 
-// code block for form
-const required$ = helpers.withMessage('Sila isi ruang yang berwarna merah!', required)
+
+const user = ref()
+const group = ref()
+const category = ref()
+const content = ref()
+
 
 const initialState = {
-  name: '',
-  group: '',
-  select: null,
+  content: '',
+  group: null,
+  category: '',
+  user: '',
 }
 
-const state = reactive({
+const attentions = reactive({
   ...initialState,
 })
 
@@ -26,48 +31,66 @@ const items = ref([
   'Item 4',
 ])
 
+const required$ = helpers.withMessage('Sila isi ruang yang berwarna merah!', required)
+
 const rules = {
-  name: { required$ },
+  user: { required$ },
   group: { required$ },
-  select: { required$ },
-  items: { required$ },
+  category: { required$ },
+  content: { required$ },
 }
 
-const v$ = useVuelidate(rules, state)
+const v$ = useVuelidate(rules, attentions)
 
-function clear() {
-  v$.value.$reset()
+// ATTENTIONS
+const attentionsCollectionRef = collection(db, 'attentions')
 
-  for (const [key, value] of Object.entries(initialState)) {
-    state[key] = value
-  }
+const addAttentionContent = () => {
+  addDoc(attentionsCollectionRef, {
+    content: content.value,
+    group: group.value,
+    category: category.value,
+    user: user.value,
+    date: Date.now()
+  })
+  content.value = null
 }
+
 </script>
 
 
 <template>
   <main>
     <div class="home">
-      <form>
-        <v-text-field v-model="state.name" :error-messages="v$.name.$errors.map(e => e.$message)" s
-          label="Pengguna" required @input="v$.name.$touch" @blur="v$.name.$touch"></v-text-field>
+      <form @submit.prevent="addAttentionContent">
+        <h1>{{ user }}</h1>
+        <v-text-field v-model="user" label="Pengguna" required @input="v$.user.$touch"
+          @blur="v$.user.$touch"></v-text-field>
 
-        <v-text-field v-model="state.group" :error-messages="v$.group.$errors.map(e => e.$message)" label="Nama Kumpulan"
-          required @input="v$.group.$touch" @blur="v$.group.$touch"></v-text-field>
+        <h1>{{ group }}</h1>
+        <v-text-field v-model="group" label="Nama Kumpulan" required @input="v$.group.$touch"
+          @blur="v$.group.$touch"></v-text-field>
 
-        <v-select v-model="state.select" :items="items" :error-messages="v$.select.$errors.map(e => e.$message)"
-          label="Kategori Jualan" required @change="v$.select.$touch" @blur="v$.select.$touch"></v-select>
+        <h1>{{ category }}</h1>
+        <v-autocomplete v-model="category" label="Kategori Jualan"
+          :items="['California', 'Colorado', 'Florida', 'Georgia', 'Texas', 'Wyoming']"></v-autocomplete>
 
+        <h1>{{ content }}</h1>
         <v-card width="600" title="A - ATTENTION [PERHATIAN]" subtitle="(Ayat menangkap minat pembaca)">
-          <textarea id="message" rows="4"
+          <textarea id="message" rows="4" v-model="content" :error-messages="v$.group.$errors.map(e => e.$message)"
+            required @input="v$.content.$touch" @blur="v$.content.$touch"
             class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             :placeholder="items[0]"></textarea>
         </v-card>
 
-        <v-btn class="me-4 mx-4 my-4 inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800" @click="v$.$validate">
+        <v-btn
+          class="me-4 mx-4 my-4 inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800"
+          @click="v$.$validate" type="submit">
           Simpan
         </v-btn>
-        <v-btn class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-red-700 rounded-lg focus:ring-4 focus:ring-red-200 dark:focus:ring-red-900 hover:bg-red-800" @click="clear">
+        <v-btn
+          class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-red-700 rounded-lg focus:ring-4 focus:ring-red-200 dark:focus:ring-red-900 hover:bg-red-800"
+          @click="">
           Kosongkan
         </v-btn>
 
@@ -79,10 +102,14 @@ function clear() {
         </v-card>
 
 
-        <v-btn class="me-4 mx-4 my-4 inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800" @click="v$.$validate">
+        <v-btn
+          class="me-4 mx-4 my-4 inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800"
+          @click="v$.$validate" type="submit">
           Simpan
         </v-btn>
-        <v-btn class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-red-700 rounded-lg focus:ring-4 focus:ring-red-200 dark:focus:ring-red-900 hover:bg-red-800" @click="clear">
+        <v-btn
+          class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-red-700 rounded-lg focus:ring-4 focus:ring-red-200 dark:focus:ring-red-900 hover:bg-red-800"
+          @click="">
           Kosongkan
         </v-btn>
 
@@ -94,10 +121,14 @@ function clear() {
         </v-card>
 
 
-        <v-btn class="me-4 mx-4 my-4 inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800" @click="v$.$validate">
+        <v-btn
+          class="me-4 mx-4 my-4 inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800"
+          @click="v$.$validate">
           Simpan
         </v-btn>
-        <v-btn class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-red-700 rounded-lg focus:ring-4 focus:ring-red-200 dark:focus:ring-red-900 hover:bg-red-800" @click="clear">
+        <v-btn
+          class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-red-700 rounded-lg focus:ring-4 focus:ring-red-200 dark:focus:ring-red-900 hover:bg-red-800"
+          @click="">
           Kosongkan
         </v-btn>
 
@@ -109,10 +140,14 @@ function clear() {
         </v-card>
 
 
-        <v-btn class="me-4 mx-4 my-4 inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800" @click="v$.$validate">
+        <v-btn
+          class="me-4 mx-4 my-4 inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800"
+          @click="v$.$validate">
           Simpan
         </v-btn>
-        <v-btn class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-red-700 rounded-lg focus:ring-4 focus:ring-red-200 dark:focus:ring-red-900 hover:bg-red-800" @click="clear">
+        <v-btn
+          class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-red-700 rounded-lg focus:ring-4 focus:ring-red-200 dark:focus:ring-red-900 hover:bg-red-800"
+          @click="">
           Kosongkan
         </v-btn>
       </form>
