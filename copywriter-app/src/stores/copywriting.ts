@@ -3,6 +3,9 @@ import { defineStore } from 'pinia'
 export const useCopywritingStore = defineStore({
     id: 'copywriting',
     state: () => ({
+        group: '',
+        user: '',
+        category: '',
         attention: '',
         interest: '',
         desire: '',

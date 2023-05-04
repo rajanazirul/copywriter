@@ -16,7 +16,6 @@ const categorySelect = ref([])
 
 
 // ATTENTIONS
-const content = ref(cwStore.attention)
 const attentionSelect = ref([])
 
 const initialState = {
@@ -42,17 +41,16 @@ const v$ = useVuelidate(rules, attentions)
 const attentionsCollectionRef = collection(db, 'attentions')
 const addAttentionContent = () => {
   addDoc(attentionsCollectionRef, {
-    content: content.value,
-    group: group.value,
-    category: category.value,
-    user: user.value,
+    content: cwStore.attention,
+    group: cwStore.group,
+    category: cwStore.group,
+    user: cwStore.user,
     date: Date.now()
   })
   cwStore.attention = ''
 }
 
 // INTERESTS
-const interestContent = ref(cwStore.interest)
 const interestSelect = ref([])
 
 const initialInterest = {
@@ -78,10 +76,10 @@ const vi$ = useVuelidate(rulesInterest, interests)
 const interestsCollectionRef = collection(db, 'interests')
 const addInterestsContent = () => {
   addDoc(interestsCollectionRef, {
-    content: interestContent.value,
-    group: group.value,
-    category: category.value,
-    user: user.value,
+    content: cwStore.interest,
+    group: cwStore.group,
+    category: cwStore.group,
+    user: cwStore.user,
     date: Date.now()
   })
   cwStore.interest = ''
@@ -89,7 +87,6 @@ const addInterestsContent = () => {
 
 
 // DESIRE
-const desireContent = ref(cwStore.desire)
 const desireSelect = ref([])
 
 const initialDesire = {
@@ -115,17 +112,16 @@ const vd$ = useVuelidate(rulesDesire, desires)
 const desiresCollectionRef = collection(db, 'desires')
 const addDesiresContent = () => {
   addDoc(desiresCollectionRef, {
-    content: desireContent.value,
-    group: group.value,
-    category: category.value,
-    user: user.value,
+    content: cwStore.desire,
+    group: cwStore.group,
+    category: cwStore.group,
+    user: cwStore.user,
     date: Date.now()
   })
   cwStore.desire = ''
 }
 
 // ACTION
-const actionContent = ref(cwStore.action)
 const actionSelect = ref([])
 
 const initialAction = {
@@ -151,10 +147,10 @@ const va$ = useVuelidate(rulesAction, actions)
 const actionsCollectionRef = collection(db, 'actions')
 const addActionsContent = () => {
   addDoc(actionsCollectionRef, {
-    content: actionContent.value,
-    group: group.value,
-    category: category.value,
-    user: user.value,
+    content: cwStore.action,
+    group: cwStore.group,
+    category: cwStore.group,
+    user: cwStore.user,
     date: Date.now()
   })
   cwStore.action = ''
@@ -202,18 +198,18 @@ onMounted(() => {
 <template>
   <main>
     <div class="home">
-      <v-text-field v-model="user" label="Pengguna" required @input="v$.user.$touch"
+      <v-text-field v-model="cwStore.user" label="Pengguna" required @input="v$.user.$touch"
         @blur="v$.user.$touch"></v-text-field>
 
-      <v-text-field v-model="group" label="Nama Kumpulan" required @input="v$.group.$touch"
+      <v-text-field v-model="cwStore.group" label="Nama Kumpulan" required @input="v$.group.$touch"
         @blur="v$.group.$touch"></v-text-field>
 
-      <v-autocomplete v-model="category" label="Kategori Jualan"
+      <v-autocomplete v-model="cwStore.category" label="Kategori Jualan"
         :items="['California', 'Colorado', 'Florida', 'Georgia', 'Texas', 'Wyoming']"></v-autocomplete>
 
       <form @submit.prevent="addAttentionContent">
         <v-card width="600" title="A - ATTENTION [PERHATIAN]" subtitle="(Ayat menangkap minat pembaca)">
-          <v-select v-model="cwStore.attention" :items="attentionSelect" label="Compact"></v-select>
+          <v-select v-model="cwStore.attention" :items="attentionSelect" label="Pilihan Ayat"></v-select>
           <textarea id="message" rows="4" v-model="cwStore.attention"
             :error-messages="v$.content.$errors.map(e => e.$message)" required @input="v$.content.$touch"
             @blur="v$.content.$touch"
@@ -235,7 +231,7 @@ onMounted(() => {
 
       <form @submit.prevent="addInterestsContent">
         <v-card width="600" title="I - INTEREST [MINAT]" subtitle="(Ayat untuk menarik minat orang membaca iklan anda)">
-          <v-select v-model="cwStore.interest" :items="interestSelect" label="Compact"></v-select>
+          <v-select v-model="cwStore.interest" :items="interestSelect" label="Pilihan Ayat"></v-select>
           <textarea id="message" rows="4" v-model="cwStore.interest"
             :error-messages="vi$.interestContent.$errors.map(e => e.$message)" required
             @input="vi$.interestContent.$touch" @blur="vi$.interestContent.$touch"
@@ -257,7 +253,7 @@ onMounted(() => {
 
       <form @submit.prevent="addDesiresContent">
         <v-card width="600" title="D - DESIRE [KEINGINAN]" subtitle="(Ayat untuk menarik pembaca membeli produk anda)">
-          <v-select v-model="cwStore.desire" :items="desireSelect" label="Compact"></v-select>
+          <v-select v-model="cwStore.desire" :items="desireSelect" label="Pilihan Ayat"></v-select>
           <textarea id="message" rows="4" v-model="cwStore.desire"
             :error-messages="vd$.desireContent.$errors.map(e => e.$message)" required @input="vd$.desireContent.$touch"
             @blur="vd$.desireContent.$touch"
@@ -279,7 +275,7 @@ onMounted(() => {
 
       <form @submit.prevent="addActionsContent">
         <v-card width="600" title="A - ACTION [TINDAKAN]" subtitle="(Maklumat mengenai cara membuat pembelian)">
-          <v-select v-model="cwStore.action" :items="actionSelect" label="Compact"></v-select>
+          <v-select v-model="cwStore.action" :items="actionSelect" label="Pilihan Ayat"></v-select>
           <textarea id="message" rows="4" v-model="cwStore.action"
             :error-messages="va$.actionContent.$errors.map(e => e.$message)" required @input="va$.actionContent.$touch"
             @blur="va$.actionContent.$touch"

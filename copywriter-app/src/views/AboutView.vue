@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import { db } from '@/firebase'
-import { collection, deleteDoc, doc } from 'firebase/firestore'
+import { collection, deleteDoc, doc, addDoc } from 'firebase/firestore'
 import { useAttentionsStore } from '@/stores/attentions'
 import { useCopywritingStore } from '@/stores/copywriting';
 
@@ -30,6 +30,23 @@ const checkCw = () => {
   }
 }
 
+// Add content copywriting
+const copywriteCollectionRef = collection(db, 'copywrite')
+const addCopywriteContent = () => {
+  if (cwStore.content == '') {
+    dialog.value = true
+  }
+  else {
+    addDoc(copywriteCollectionRef, {
+      content: cwStore.content,
+      group: cwStore.group,
+      category: cwStore.category,
+      user: cwStore.user,
+      date: Date.now()
+    })
+  }
+}
+
 // Get attentions
 onMounted(() => {
   attentionStore.getAttentions()
@@ -52,7 +69,7 @@ onMounted(() => {
         </v-card>
       </v-dialog>
     </div>
-    <div v-for="todo in attentionStore.attentions" class="d-flex align-center flex-column">
+    <!-- <div v-for="todo in attentionStore.attentions" class="d-flex align-center flex-column">
       <div>
         <v-card width="400" :title=todo.id>
           <v-col cols="auto">
@@ -61,7 +78,7 @@ onMounted(() => {
           </v-col>
         </v-card>
       </div>
-    </div>
+    </div> -->
 
     <div class="grid h-screen place-items-center">
 
@@ -79,7 +96,7 @@ onMounted(() => {
               Jana Copywriting
             </button>
             <div class="flex pl-0 space-x-1 sm:pl-2">
-              <button type="submit"
+              <button @click="addCopywriteContent"
                 class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-red-700 rounded-lg focus:ring-4 focus:ring-red-200 dark:focus:ring-red-900 hover:bg-red-800">
                 Simpan Copywriting
               </button>
@@ -87,8 +104,8 @@ onMounted(() => {
           </div>
         </div>
       </form>
-      <p class="ml-auto text-xs text-gray-500 dark:text-gray-400">Remember, contributions to this topic should follow our
-        <a href="#" class="text-blue-600 dark:text-blue-500 hover:underline">Community Guidelines</a>.
+      <p class="ml-auto text-xs text-gray-500 dark:text-gray-400">Sistem aplikasi copywriting dilengkapi database
+        <a href="#" class="text-blue-600 dark:text-blue-500 hover:underline">Hak Cipta terpelihara</a>.
       </p>
 
     </div>
