@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { onMounted } from 'vue';
 import { db } from '@/firebase'
-import { collection, onSnapshot, addDoc, deleteDoc, doc, updateDoc, query, orderBy, limit } from 'firebase/firestore'
+import { collection, deleteDoc, doc} from 'firebase/firestore'
 import { useAttentionsStore } from '@/stores/attentions'
 
 // const attentionsData = ref([])
