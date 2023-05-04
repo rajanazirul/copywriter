@@ -8,11 +8,11 @@ import { useCopywritingStore } from '@/stores/copywriting'
 
 const cwStore = useCopywritingStore()
 
-const user = ref()
+const dialog = ref(false)
 const group = ref()
 const groupSelect = ref([])
 const category = ref()
-const categorySelect = ref([])
+const categorySelect = ref(['test'])
 
 
 // ATTENTIONS
@@ -48,6 +48,7 @@ const addAttentionContent = () => {
     date: Date.now()
   })
   cwStore.attention = ''
+  dialog.value = true
 }
 
 // INTERESTS
@@ -83,6 +84,7 @@ const addInterestsContent = () => {
     date: Date.now()
   })
   cwStore.interest = ''
+  dialog.value = true
 }
 
 
@@ -119,6 +121,7 @@ const addDesiresContent = () => {
     date: Date.now()
   })
   cwStore.desire = ''
+  dialog.value = true
 }
 
 // ACTION
@@ -154,6 +157,7 @@ const addActionsContent = () => {
     date: Date.now()
   })
   cwStore.action = ''
+  dialog.value = true
 }
 
 const attentionsCollectionQuery = query(attentionsCollectionRef, orderBy('date', 'desc'), limit(9))
@@ -205,7 +209,7 @@ onMounted(() => {
         @blur="v$.group.$touch"></v-text-field>
 
       <v-autocomplete v-model="cwStore.category" label="Kategori Jualan"
-        :items="['California', 'Colorado', 'Florida', 'Georgia', 'Texas', 'Wyoming']"></v-autocomplete>
+        :items="categorySelect"></v-autocomplete>
 
       <form @submit.prevent="addAttentionContent">
         <v-card width="600" title="A - ATTENTION [PERHATIAN]" subtitle="(Ayat menangkap minat pembaca)">
@@ -296,6 +300,31 @@ onMounted(() => {
       </form>
 
     </div>
+
+    <!-- Dialog success -->
+    <v-dialog
+        transition="dialog-bottom-transition"
+        width="auto"
+        v-model="dialog"
+      >
+        <template v-slot:default="{ isActive }">
+          <v-card>
+            <v-toolbar
+              color="primary"
+              title="Berjaya!"
+            ></v-toolbar>
+            <v-card-text>
+              <div class="text-h2 pa-12">Ayat berjaya disimpan!</div>
+            </v-card-text>
+            <v-card-actions class="justify-end">
+              <v-btn
+                variant="text"
+                @click="isActive.value = false"
+              >Tutup</v-btn>
+            </v-card-actions>
+          </v-card>
+        </template>
+      </v-dialog>
 
   </main>
 </template>
