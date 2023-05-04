@@ -1,26 +1,23 @@
 <script setup lang="ts">
-import { ref, reactive } from 'vue';
+import { ref, reactive, onMounted, watchEffect } from 'vue';
 import { db } from '@/firebase'
 import { useVuelidate } from '@vuelidate/core'
 import { required, helpers } from '@vuelidate/validators'
-import { collection, addDoc} from 'firebase/firestore'
+import { collection, addDoc, query, orderBy, limit, onSnapshot } from 'firebase/firestore'
 import { useCopywritingStore } from '@/stores/copywriting'
 
 const cwStore = useCopywritingStore()
+
 const user = ref()
 const group = ref()
+const groupSelect = ref([])
 const category = ref()
-
-const items = ref([
-  'Item 1',
-  'Item 2',
-  'Item 3',
-  'Item 4',
-])
+const categorySelect = ref([])
 
 
 // ATTENTIONS
 const content = ref(cwStore.attention)
+const attentionSelect = ref([])
 
 const initialState = {
   content: '',
@@ -56,6 +53,7 @@ const addAttentionContent = () => {
 
 // INTERESTS
 const interestContent = ref(cwStore.interest)
+const interestSelect = ref([])
 
 const initialInterest = {
   interestContent: '',
@@ -92,6 +90,7 @@ const addInterestsContent = () => {
 
 // DESIRE
 const desireContent = ref(cwStore.desire)
+const desireSelect = ref([])
 
 const initialDesire = {
   desireContent: '',
@@ -127,6 +126,7 @@ const addDesiresContent = () => {
 
 // ACTION
 const actionContent = ref(cwStore.action)
+const actionSelect = ref([])
 
 const initialAction = {
   actionContent: '',
@@ -159,6 +159,43 @@ const addActionsContent = () => {
   })
   cwStore.action = ''
 }
+
+const attentionsCollectionQuery = query(attentionsCollectionRef, orderBy('date', 'desc'), limit(9))
+const interestsCollectionQuery = query(interestsCollectionRef, orderBy('date', 'desc'), limit(9))
+const desiresCollectionQuery = query(desiresCollectionRef, orderBy('date', 'desc'), limit(9))
+const actionsCollectionQuery = query(actionsCollectionRef, orderBy('date', 'desc'), limit(9))
+
+onMounted(() => {
+  onSnapshot(attentionsCollectionQuery, (querySnapshot) => {
+    const fbattentions: Array<object> = []
+    querySnapshot.forEach((doc) => {
+      fbattentions.push(doc.data().content)
+    })
+    attentionSelect.value = fbattentions
+  }),
+  onSnapshot(interestsCollectionQuery, (querySnapshot) => {
+    const fbattentions: Array<object> = []
+    querySnapshot.forEach((doc) => {
+      fbattentions.push(doc.data().content)
+    })
+    interestSelect.value = fbattentions
+  }),
+  onSnapshot(desiresCollectionQuery, (querySnapshot) => {
+    const fbattentions: Array<object> = []
+    querySnapshot.forEach((doc) => {
+      fbattentions.push(doc.data().content)
+    })
+    desireSelect.value = fbattentions
+  }),
+  onSnapshot(actionsCollectionQuery, (querySnapshot) => {
+    const fbattentions: Array<object> = []
+    querySnapshot.forEach((doc) => {
+      fbattentions.push(doc.data().content)
+    })
+    actionSelect.value = fbattentions
+  })
+})
+
 </script>
 
 
@@ -176,8 +213,10 @@ const addActionsContent = () => {
 
       <form @submit.prevent="addAttentionContent">
         <v-card width="600" title="A - ATTENTION [PERHATIAN]" subtitle="(Ayat menangkap minat pembaca)">
-          <textarea id="message" rows="4" v-model="cwStore.attention" :error-messages="v$.content.$errors.map(e => e.$message)"
-            required @input="v$.content.$touch" @blur="v$.content.$touch"
+          <v-select v-model="cwStore.attention" :items="attentionSelect" label="Compact"></v-select>
+          <textarea id="message" rows="4" v-model="cwStore.attention"
+            :error-messages="v$.content.$errors.map(e => e.$message)" required @input="v$.content.$touch"
+            @blur="v$.content.$touch"
             class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="Sila isi ayat disini..."></textarea>
         </v-card>
@@ -196,8 +235,10 @@ const addActionsContent = () => {
 
       <form @submit.prevent="addInterestsContent">
         <v-card width="600" title="I - INTEREST [MINAT]" subtitle="(Ayat untuk menarik minat orang membaca iklan anda)">
-          <textarea id="message" rows="4" v-model="cwStore.interest" :error-messages="vi$.interestContent.$errors.map(e => e.$message)"
-            required @input="vi$.interestContent.$touch" @blur="vi$.interestContent.$touch"
+          <v-select v-model="cwStore.interest" :items="interestSelect" label="Compact"></v-select>
+          <textarea id="message" rows="4" v-model="cwStore.interest"
+            :error-messages="vi$.interestContent.$errors.map(e => e.$message)" required
+            @input="vi$.interestContent.$touch" @blur="vi$.interestContent.$touch"
             class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="Sila isi ayat disini..."></textarea>
         </v-card>
@@ -216,15 +257,17 @@ const addActionsContent = () => {
 
       <form @submit.prevent="addDesiresContent">
         <v-card width="600" title="D - DESIRE [KEINGINAN]" subtitle="(Ayat untuk menarik pembaca membeli produk anda)">
-          <textarea id="message" rows="4" v-model="cwStore.desire" :error-messages="vd$.desireContent.$errors.map(e => e.$message)"
-            required @input="vd$.desireContent.$touch" @blur="vd$.desireContent.$touch"
+          <v-select v-model="cwStore.desire" :items="desireSelect" label="Compact"></v-select>
+          <textarea id="message" rows="4" v-model="cwStore.desire"
+            :error-messages="vd$.desireContent.$errors.map(e => e.$message)" required @input="vd$.desireContent.$touch"
+            @blur="vd$.desireContent.$touch"
             class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="Sila isi ayat disini..."></textarea>
         </v-card>
 
         <v-btn
           class="me-4 mx-4 my-4 inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800"
-          @click="vd$.$validate" type="submit"> 
+          @click="vd$.$validate" type="submit">
           Simpan
         </v-btn>
         <v-btn
@@ -236,8 +279,10 @@ const addActionsContent = () => {
 
       <form @submit.prevent="addActionsContent">
         <v-card width="600" title="A - ACTION [TINDAKAN]" subtitle="(Maklumat mengenai cara membuat pembelian)">
-          <textarea id="message" rows="4" v-model="cwStore.action" :error-messages="va$.actionContent.$errors.map(e => e.$message)"
-            required @input="va$.actionContent.$touch" @blur="va$.actionContent.$touch"
+          <v-select v-model="cwStore.action" :items="actionSelect" label="Compact"></v-select>
+          <textarea id="message" rows="4" v-model="cwStore.action"
+            :error-messages="va$.actionContent.$errors.map(e => e.$message)" required @input="va$.actionContent.$touch"
+            @blur="va$.actionContent.$touch"
             class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="Sila isi ayat disini..."></textarea>
         </v-card>
