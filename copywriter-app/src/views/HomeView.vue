@@ -88,6 +88,41 @@ const addInterestsContent = () => {
   interestContent.value = null
 }
 
+
+// DESIRE
+const desireContent = ref()
+
+const initialDesire = {
+  desireContent: '',
+  group: null,
+  category: '',
+  user: '',
+}
+
+const desires = reactive({
+  ...initialDesire,
+})
+
+const requiredDesire$ = helpers.withMessage('Sila isi ruang yang berwarna merah!', required)
+const rulesDesire = {
+  user: { requiredDesire$ },
+  group: { requiredDesire$ },
+  category: { requiredDesire$ },
+  desireContent: { requiredDesire$ },
+}
+const vd$ = useVuelidate(rulesDesire, desires)
+
+const desiresCollectionRef = collection(db, 'desires')
+const addDesiresContent = () => {
+  addDoc(desiresCollectionRef, {
+    content: desireContent.value,
+    group: group.value,
+    category: category.value,
+    user: user.value,
+    date: Date.now()
+  })
+  desireContent.value = null
+}
 </script>
 
 
@@ -143,16 +178,17 @@ const addInterestsContent = () => {
         </v-btn>
       </form>
 
-      <form @submit.prevent="">
+      <form @submit.prevent="addDesiresContent">
         <v-card width="600" title="D - DESIRE [KEINGINAN]" subtitle="(Ayat untuk menarik pembaca membeli produk anda)">
-          <textarea id="message" rows="4"
+          <textarea id="message" rows="4" v-model="desireContent" :error-messages="vd$.desireContent.$errors.map(e => e.$message)"
+            required @input="vd$.desireContent.$touch" @blur="vd$.desireContent.$touch"
             class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             :placeholder="items[0]"></textarea>
         </v-card>
 
         <v-btn
           class="me-4 mx-4 my-4 inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800"
-          @click="v$.$validate">
+          @click="vd$.$validate" type="submit"> 
           Simpan
         </v-btn>
         <v-btn
