@@ -16,8 +16,10 @@ export const useCopywritingStore = defineStore({
   },
   actions: {
     generateCopywriting() {
-      this.content = this.attention + this.interest + this.desire + this.action
+        if ((this.attention == '') || (this.interest == '') || (this.desire == '') || (this.action == '')){
+            return this.content = 'bad'
+        }
+        return this.content = 'good'
     },
   }
-  
 })
