@@ -196,7 +196,7 @@ const addActionsContent = () => {
 
       <form @submit.prevent="addInterestsContent">
         <v-card width="600" title="I - INTEREST [MINAT]" subtitle="(Ayat untuk menarik minat orang membaca iklan anda)">
-          <textarea id="message" rows="4" v-model="interestContent" :error-messages="vi$.interestContent.$errors.map(e => e.$message)"
+          <textarea id="message" rows="4" v-model="cwStore.interest" :error-messages="vi$.interestContent.$errors.map(e => e.$message)"
             required @input="vi$.interestContent.$touch" @blur="vi$.interestContent.$touch"
             class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             :placeholder="items[0]"></textarea>
@@ -216,7 +216,7 @@ const addActionsContent = () => {
 
       <form @submit.prevent="addDesiresContent">
         <v-card width="600" title="D - DESIRE [KEINGINAN]" subtitle="(Ayat untuk menarik pembaca membeli produk anda)">
-          <textarea id="message" rows="4" v-model="desireContent" :error-messages="vd$.desireContent.$errors.map(e => e.$message)"
+          <textarea id="message" rows="4" v-model="cwStore.desire" :error-messages="vd$.desireContent.$errors.map(e => e.$message)"
             required @input="vd$.desireContent.$touch" @blur="vd$.desireContent.$touch"
             class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             :placeholder="items[0]"></textarea>
@@ -236,7 +236,7 @@ const addActionsContent = () => {
 
       <form @submit.prevent="addActionsContent">
         <v-card width="600" title="A - ACTION [TINDAKAN]" subtitle="(Maklumat mengenai cara membuat pembelian)">
-          <textarea id="message" rows="4" v-model="actionContent" :error-messages="va$.actionContent.$errors.map(e => e.$message)"
+          <textarea id="message" rows="4" v-model="cwStore.action" :error-messages="va$.actionContent.$errors.map(e => e.$message)"
             required @input="va$.actionContent.$touch" @blur="va$.actionContent.$touch"
             class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             :placeholder="items[0]"></textarea>
