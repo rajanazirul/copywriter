@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { ref, onMounted, reactive } from 'vue';
+import { ref, reactive } from 'vue';
 import { db } from '@/firebase'
 import { useVuelidate } from '@vuelidate/core'
 import { required, helpers } from '@vuelidate/validators'
 import { collection, addDoc} from 'firebase/firestore'
+import { useCopywritingStore } from '@/stores/copywriting'
 
-
+const cwStore = useCopywritingStore()
 const user = ref()
 const group = ref()
 const category = ref()
@@ -19,7 +20,7 @@ const items = ref([
 
 
 // ATTENTIONS
-const content = ref()
+const content = ref(cwStore.attention)
 
 const initialState = {
   content: '',
@@ -50,11 +51,11 @@ const addAttentionContent = () => {
     user: user.value,
     date: Date.now()
   })
-  content.value = null
+  cwStore.attention = ''
 }
 
 // INTERESTS
-const interestContent = ref()
+const interestContent = ref(cwStore.interest)
 
 const initialInterest = {
   interestContent: '',
@@ -85,12 +86,12 @@ const addInterestsContent = () => {
     user: user.value,
     date: Date.now()
   })
-  interestContent.value = null
+  cwStore.interest = ''
 }
 
 
 // DESIRE
-const desireContent = ref()
+const desireContent = ref(cwStore.desire)
 
 const initialDesire = {
   desireContent: '',
@@ -121,11 +122,11 @@ const addDesiresContent = () => {
     user: user.value,
     date: Date.now()
   })
-  desireContent.value = null
+  cwStore.desire = ''
 }
 
 // ACTION
-const actionContent = ref()
+const actionContent = ref(cwStore.action)
 
 const initialAction = {
   actionContent: '',
@@ -156,7 +157,7 @@ const addActionsContent = () => {
     user: user.value,
     date: Date.now()
   })
-  actionContent.value = null
+  cwStore.action = ''
 }
 </script>
 
@@ -175,7 +176,7 @@ const addActionsContent = () => {
 
       <form @submit.prevent="addAttentionContent">
         <v-card width="600" title="A - ATTENTION [PERHATIAN]" subtitle="(Ayat menangkap minat pembaca)">
-          <textarea id="message" rows="4" v-model="content" :error-messages="v$.content.$errors.map(e => e.$message)"
+          <textarea id="message" rows="4" v-model="cwStore.attention" :error-messages="v$.content.$errors.map(e => e.$message)"
             required @input="v$.content.$touch" @blur="v$.content.$touch"
             class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             :placeholder="items[0]"></textarea>
