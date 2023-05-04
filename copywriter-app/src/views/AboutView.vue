@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
 import { db } from '@/firebase'
-import { collection, deleteDoc, doc} from 'firebase/firestore'
+import { collection, deleteDoc, doc } from 'firebase/firestore'
 import { useAttentionsStore } from '@/stores/attentions'
 import { useCopywritingStore } from '@/stores/copywriting';
 
@@ -11,8 +11,23 @@ const attentionsCollectionRef = collection(db, 'attentions')
 
 const store = useAttentionsStore()
 
+const alert = ref()
+const dialog = ref(false)
+
+const content = ref()
+
 const deleteContent = id => {
   deleteDoc(doc(attentionsCollectionRef, id))
+}
+
+const checkCw = () => {
+  alert.value = cwStore.validateCopywriting()
+  if (alert.value == true) {
+    content.value = cwStore.copywritingContent
+  }
+  else {
+    dialog.value = true
+  }
 }
 
 // Get attentions
@@ -24,7 +39,20 @@ onMounted(() => {
 <template>
   <div class="about">
 
-    <div v-for="todo in store.attentions" class="d-flex align-center flex-column">
+    <!-- Dialog -->
+    <div class="text-center">
+      <v-dialog v-model="dialog" width="auto">
+        <v-card>
+          <v-card-text>
+            Maklumat AYAT disalah satu kotak A-Attention, I-Interest, D-Desire, A-Action tidak DIISI
+          </v-card-text>
+          <v-card-actions>
+            <v-btn color="primary" block @click="dialog = false">Tutup</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </div>
+    <!-- <div v-for="todo in store.attentions" class="d-flex align-center flex-column">
       <div>
         <v-card width="400" :title=todo.id>
           <v-col cols="auto">
@@ -33,15 +61,15 @@ onMounted(() => {
           </v-col>
         </v-card>
       </div>
-    </div>
+    </div> -->
 
     <div class="grid h-screen place-items-center">
 
-      <form @submit.prevent="cwStore.generateCopywriting()">
+      <form @submit.prevent="checkCw()">
         <div class="w-full mb-4 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
           <div class="px-4 py-2 bg-white rounded-t-lg dark:bg-gray-800">
             <label for="comment" class="sr-only">Ayat copywriting</label>
-            <textarea id="comment" rows="4"
+            <textarea id="comment" rows="4" v-model="content"
               class="w-full px-0 text-sm text-gray-900 bg-white border-0 dark:bg-gray-800 focus:ring-0 dark:text-white dark:placeholder-gray-400 h-96"
               placeholder="Ayat copywriting..."></textarea>
           </div>

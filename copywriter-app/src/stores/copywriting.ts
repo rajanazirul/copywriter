@@ -15,11 +15,11 @@ export const useCopywritingStore = defineStore({
     }
   },
   actions: {
-    generateCopywriting() {
+    validateCopywriting() {
         if ((this.attention == '') || (this.interest == '') || (this.desire == '') || (this.action == '')){
-            return this.content = 'bad'
+            return false
         }
-        return this.content = 'good'
+        return true
     },
   }
 })
