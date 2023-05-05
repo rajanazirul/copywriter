@@ -11,6 +11,7 @@ import { useDesiresStore } from '@/stores/desires'
 import { useActionsStore } from '@/stores/actions'
 import { useCategoryStore } from '@/stores/category'
 import Category from '@/components/Category.vue'
+import DigitalClock from '@/components/DigitalClock.vue'
 
 
 const cwStore = useCopywritingStore()
@@ -21,10 +22,10 @@ const actionStore = useActionsStore()
 const categoryStore = useCategoryStore()
 
 const dialog = ref(false)
-const resetAttention = () => {cwStore.attention = ''}
-const resetInterest = () => {cwStore.interest = ''}
-const resetDesire = () => {cwStore.desire = ''}
-const resetAction = () => {cwStore.action = ''}
+const resetAttention = () => { cwStore.attention = '' }
+const resetInterest = () => { cwStore.interest = '' }
+const resetDesire = () => { cwStore.desire = '' }
+const resetAction = () => { cwStore.action = '' }
 
 // ATTENTIONS
 const initialState = {
@@ -178,11 +179,14 @@ watch(() => categoryStore.category, () => {
 <template>
   <main>
     <div class="home">
+
+      <DigitalClock />
+
       <v-text-field v-model="cwStore.user" label="Pengguna" required @input="v$.user.$touch"
-        @blur="v$.user.$touch"></v-text-field>
+        @blur="v$.user.$touch" variant="outlined"></v-text-field>
 
       <v-text-field v-model="cwStore.group" label="Nama Kumpulan" required @input="v$.group.$touch"
-        @blur="v$.group.$touch"></v-text-field>
+        @blur="v$.group.$touch" variant="outlined"></v-text-field>
 
       <Category />
 
