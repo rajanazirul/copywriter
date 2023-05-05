@@ -6,12 +6,14 @@ import { required, helpers } from '@vuelidate/validators'
 import { collection, addDoc, query, orderBy, limit, onSnapshot } from 'firebase/firestore'
 import { useCopywritingStore } from '@/stores/copywriting'
 import { useAttentionsStore } from '@/stores/attentions'
-import { useCategoryStore } from '@/stores/category';
+import { useInterestsStore } from '@/stores/interests'
+import { useCategoryStore } from '@/stores/category'
 import Category from '@/components/Category.vue'
 
 
 const cwStore = useCopywritingStore()
 const attentionStore = useAttentionsStore()
+const interestStore = useInterestsStore()
 const categoryStore = useCategoryStore()
 
 const dialog = ref(false)
@@ -56,8 +58,6 @@ const addAttentionContent = () => {
 }
 
 // INTERESTS
-const interestSelect = ref([])
-
 const initialInterest = {
   interestContent: '',
   group: null,
@@ -164,26 +164,17 @@ const addActionsContent = () => {
   dialog.value = true
 }
 
-const attentionsCollectionQuery = query(attentionsCollectionRef, orderBy('date', 'desc'), limit(9))
-const interestsCollectionQuery = query(interestsCollectionRef, orderBy('date', 'desc'), limit(9))
 const desiresCollectionQuery = query(desiresCollectionRef, orderBy('date', 'desc'), limit(9))
 const actionsCollectionQuery = query(actionsCollectionRef, orderBy('date', 'desc'), limit(9))
 
 onMounted(() => {
-    onSnapshot(interestsCollectionQuery, (querySnapshot) => {
-      const fbattentions: any = []
-      querySnapshot.forEach((doc) => {
-        fbattentions.push(doc.data().content)
-      })
-      interestSelect.value = fbattentions
-    }),
-    onSnapshot(desiresCollectionQuery, (querySnapshot) => {
-      const fbattentions: any = []
-      querySnapshot.forEach((doc) => {
-        fbattentions.push(doc.data().content)
-      })
-      desireSelect.value = fbattentions
-    }),
+  onSnapshot(desiresCollectionQuery, (querySnapshot) => {
+    const fbattentions: any = []
+    querySnapshot.forEach((doc) => {
+      fbattentions.push(doc.data().content)
+    })
+    desireSelect.value = fbattentions
+  }),
     onSnapshot(actionsCollectionQuery, (querySnapshot) => {
       const fbattentions: any = []
       querySnapshot.forEach((doc) => {
@@ -194,8 +185,8 @@ onMounted(() => {
 })
 
 watch(() => categoryStore.category, () => {
-  console.log(categoryStore.category)
   attentionStore.getAttentions()
+  interestStore.getInterests()
 }, { immediate: true });
 
 
@@ -237,7 +228,7 @@ watch(() => categoryStore.category, () => {
 
       <form @submit.prevent="addInterestsContent">
         <v-card width="600" title="I - INTEREST [MINAT]" subtitle="(Ayat untuk menarik minat orang membaca iklan anda)">
-          <v-select v-model="cwStore.interest" :items="interestSelect" label="Pilihan Ayat"></v-select>
+          <v-select v-model="cwStore.interest" :items="interestStore.interestContent" label="Pilihan Ayat"></v-select>
           <textarea id="message" rows="4" v-model="cwStore.interest"
             :error-messages="vi$.interestContent.$errors.map(e => e.$message)" required
             @input="vi$.interestContent.$touch" @blur="vi$.interestContent.$touch"
