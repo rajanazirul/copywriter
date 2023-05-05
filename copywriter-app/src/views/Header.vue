@@ -22,7 +22,7 @@ import { RouterLink } from 'vue-router'
         <div>
             <v-btn class="my-2">
                 <RouterLink to="/tambah-kategori" class="text-black">
-                    Tambah Kategori
+                    Tambah Kategori Jualan
                 </RouterLink>
             </v-btn>
         </div>
