@@ -8,6 +8,7 @@ import { useCopywritingStore } from '@/stores/copywriting'
 import { useAttentionsStore } from '@/stores/attentions'
 import { useInterestsStore } from '@/stores/interests'
 import { useDesiresStore } from '@/stores/desires'
+import { useActionsStore } from '@/stores/actions'
 import { useCategoryStore } from '@/stores/category'
 import Category from '@/components/Category.vue'
 
@@ -16,6 +17,7 @@ const cwStore = useCopywritingStore()
 const attentionStore = useAttentionsStore()
 const interestStore = useInterestsStore()
 const desireStore = useDesiresStore()
+const actionStore = useActionsStore()
 const categoryStore = useCategoryStore()
 
 const dialog = ref(false)
@@ -129,8 +131,6 @@ const addDesiresContent = () => {
 }
 
 // ACTION
-const actionSelect = ref([])
-
 const initialAction = {
   actionContent: '',
   group: null,
@@ -164,22 +164,11 @@ const addActionsContent = () => {
   dialog.value = true
 }
 
-const actionsCollectionQuery = query(actionsCollectionRef, orderBy('date', 'desc'), limit(9))
-
-onMounted(() => {
-  onSnapshot(actionsCollectionQuery, (querySnapshot) => {
-    const fbattentions: any = []
-    querySnapshot.forEach((doc) => {
-      fbattentions.push(doc.data().content)
-    })
-    actionSelect.value = fbattentions
-  })
-})
-
 watch(() => categoryStore.category, () => {
   attentionStore.getAttentions()
   interestStore.getInterests()
   desireStore.getDesires()
+  actionStore.getActions()
 }, { immediate: true });
 
 
@@ -265,7 +254,7 @@ watch(() => categoryStore.category, () => {
 
       <form @submit.prevent="addActionsContent">
         <v-card width="600" title="A - ACTION [TINDAKAN]" subtitle="(Maklumat mengenai cara membuat pembelian)">
-          <v-select v-model="cwStore.action" :items="actionSelect" label="Pilihan Ayat"></v-select>
+          <v-select v-model="cwStore.action" :items="actionStore.attentionContent" label="Pilihan Ayat"></v-select>
           <textarea id="message" rows="4" v-model="cwStore.action"
             :error-messages="va$.actionContent.$errors.map(e => e.$message)" required @input="va$.actionContent.$touch"
             @blur="va$.actionContent.$touch"
