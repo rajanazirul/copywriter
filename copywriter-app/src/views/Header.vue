@@ -19,6 +19,13 @@ import { RouterLink } from 'vue-router'
                 </RouterLink>
             </v-btn>
         </div>
+        <div>
+            <v-btn class="my-2">
+                <RouterLink to="/tambah-kategori" class="text-black">
+                    Tambah Kategori
+                </RouterLink>
+            </v-btn>
+        </div>
     </nav>
 </template>
 
