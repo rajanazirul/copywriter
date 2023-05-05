@@ -3,8 +3,10 @@ import { ref } from 'vue';
 import { db } from '@/firebase'
 import { collection, addDoc } from 'firebase/firestore'
 import { useCopywritingStore } from '@/stores/copywriting';
+import { useCategoryStore } from '@/stores/category'
 
 const cwStore = useCopywritingStore()
+const categoryStore = useCategoryStore()
 
 const alert = ref()
 const dialog = ref(false)
@@ -33,11 +35,10 @@ const addCopywriteContent = () => {
     addDoc(copywriteCollectionRef, {
       content: content.value,
       group: cwStore.group,
-      category: cwStore.category,
+      category: categoryStore.category,
       user: cwStore.user,
       date: Date.now()
     })
-    content.value = ''
     dialog1.value = true
   }
 }
