@@ -7,6 +7,7 @@ import { collection, addDoc, query, orderBy, limit, onSnapshot } from 'firebase/
 import { useCopywritingStore } from '@/stores/copywriting'
 import { useAttentionsStore } from '@/stores/attentions'
 import { useInterestsStore } from '@/stores/interests'
+import { useDesiresStore } from '@/stores/desires'
 import { useCategoryStore } from '@/stores/category'
 import Category from '@/components/Category.vue'
 
@@ -14,6 +15,7 @@ import Category from '@/components/Category.vue'
 const cwStore = useCopywritingStore()
 const attentionStore = useAttentionsStore()
 const interestStore = useInterestsStore()
+const desireStore = useDesiresStore()
 const categoryStore = useCategoryStore()
 
 const dialog = ref(false)
@@ -93,8 +95,6 @@ const addInterestsContent = () => {
 
 
 // DESIRE
-const desireSelect = ref([])
-
 const initialDesire = {
   desireContent: '',
   group: null,
@@ -164,29 +164,22 @@ const addActionsContent = () => {
   dialog.value = true
 }
 
-const desiresCollectionQuery = query(desiresCollectionRef, orderBy('date', 'desc'), limit(9))
 const actionsCollectionQuery = query(actionsCollectionRef, orderBy('date', 'desc'), limit(9))
 
 onMounted(() => {
-  onSnapshot(desiresCollectionQuery, (querySnapshot) => {
+  onSnapshot(actionsCollectionQuery, (querySnapshot) => {
     const fbattentions: any = []
     querySnapshot.forEach((doc) => {
       fbattentions.push(doc.data().content)
     })
-    desireSelect.value = fbattentions
-  }),
-    onSnapshot(actionsCollectionQuery, (querySnapshot) => {
-      const fbattentions: any = []
-      querySnapshot.forEach((doc) => {
-        fbattentions.push(doc.data().content)
-      })
-      actionSelect.value = fbattentions
-    })
+    actionSelect.value = fbattentions
+  })
 })
 
 watch(() => categoryStore.category, () => {
   attentionStore.getAttentions()
   interestStore.getInterests()
+  desireStore.getDesires()
 }, { immediate: true });
 
 
@@ -250,7 +243,7 @@ watch(() => categoryStore.category, () => {
 
       <form @submit.prevent="addDesiresContent">
         <v-card width="600" title="D - DESIRE [KEINGINAN]" subtitle="(Ayat untuk menarik pembaca membeli produk anda)">
-          <v-select v-model="cwStore.desire" :items="desireSelect" label="Pilihan Ayat"></v-select>
+          <v-select v-model="cwStore.desire" :items="desireStore.desireContent" label="Pilihan Ayat"></v-select>
           <textarea id="message" rows="4" v-model="cwStore.desire"
             :error-messages="vd$.desireContent.$errors.map(e => e.$message)" required @input="vd$.desireContent.$touch"
             @blur="vd$.desireContent.$touch"
