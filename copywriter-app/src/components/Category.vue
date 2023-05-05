@@ -13,7 +13,7 @@ onMounted(() => {
 
 <template>
     <div class="category">
-        <v-select v-model="categoryStore.category" :items="categoryStore.categories" label="Pilihan Ayat" variant="outlined"></v-select>
+        <v-select v-model="categoryStore.category" :items="categoryStore.categories" label="Kategori Jualan" variant="outlined"></v-select>
         <h1>{{ categorySubmit }}</h1>
 
     </div>
