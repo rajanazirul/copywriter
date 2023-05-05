@@ -20,6 +20,7 @@
     "firebase": "^9.21.0",
     "pinia": "^2.0.32",
     "vue": "^3.2.47",
+    "vue-clipboard3": "^2.0.0",
     "vue-router": "^4.1.6",
     "vuetify": "^3.1.15"
   },
