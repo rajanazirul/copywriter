@@ -4,8 +4,6 @@ import { useCategoryStore } from '@/stores/category'
 
 const categoryStore = useCategoryStore()
 
-const categorySubmit = ref()
-
 onMounted(() => {
     categoryStore.getCategories()
 })
@@ -14,8 +12,6 @@ onMounted(() => {
 <template>
     <div class="category">
         <v-select v-model="categoryStore.category" :items="categoryStore.categories" label="Kategori Jualan" variant="outlined"></v-select>
-        <h1>{{ categorySubmit }}</h1>
-
     </div>
 </template>
 
