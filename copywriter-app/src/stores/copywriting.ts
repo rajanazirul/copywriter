@@ -18,10 +18,7 @@ export const useCopywritingStore = defineStore({
     }),
     getters: {
         copywritingContent: (state) => {
-            if (state.content != '') {
-                return state.attention + '\n' + state.interest + '\n' + state.desire + '\n' + state.action
-            }
-            return state.content
+            return state.attention + '\n' + state.interest + '\n' + state.desire + '\n' + state.action
         },
         copywritesContent: (state) => {
             const data: Array<object> = []
