@@ -1,12 +1,16 @@
 <script setup lang="ts">
-// import { RouterLink, RouterView } from 'vue-router'
 import ContentView from '@/views/ContentView.vue'
+import Header from '@/views/Header.vue'
 import CopywriteView from '@/views/CopywriteView.vue'
 </script>
 
 <template>
-    <div>
+    <div class="home">
         <div>
+            <div>
+                <Header />
+            </div>
+
             <ContentView />
         </div>
 
@@ -16,4 +20,18 @@ import CopywriteView from '@/views/CopywriteView.vue'
     </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+@media (min-width: 1024px) {
+    .home body {
+        display: flex;
+        place-items: center;
+    }
+
+    .home {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10%;
+        padding: 0 2rem;
+    }
+}
+</style>
