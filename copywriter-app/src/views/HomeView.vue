@@ -165,6 +165,7 @@ watch(() => categoryStore.category, () => {
   interestStore.getInterests()
   desireStore.getDesires()
   actionStore.getActions()
+  cwStore.getCopywrite()
   cwStore.attention = ''
   cwStore.interest = ''
   cwStore.desire = ''
