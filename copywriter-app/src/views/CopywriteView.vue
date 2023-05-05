@@ -1,25 +1,16 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { ref } from 'vue';
 import { db } from '@/firebase'
-import { collection, deleteDoc, doc, addDoc } from 'firebase/firestore'
-import { useAttentionsStore } from '@/stores/attentions'
+import { collection, addDoc } from 'firebase/firestore'
 import { useCopywritingStore } from '@/stores/copywriting';
 
 const cwStore = useCopywritingStore()
-
-const attentionsCollectionRef = collection(db, 'attentions')
-
-const attentionStore = useAttentionsStore()
 
 const alert = ref()
 const dialog = ref(false)
 const dialog1 = ref(false)
 
 const content = ref('')
-
-const deleteContent = (id:any) => {
-  deleteDoc(doc(attentionsCollectionRef, id))
-}
 
 const checkCw = () => {
   alert.value = cwStore.validateCopywriting()
@@ -50,11 +41,6 @@ const addCopywriteContent = () => {
     dialog1.value = true
   }
 }
-
-// Get attentions
-onMounted(() => {
-  attentionStore.getAttentions()
-})
 </script>
 
 <template>
@@ -98,16 +84,6 @@ onMounted(() => {
           </v-card>
         </template>
       </v-dialog>
-    <!-- <div v-for="todo in attentionStore.attentions" class="d-flex align-center flex-column">
-      <div>
-        <v-card width="400" :title=todo.id>
-          <v-col cols="auto">
-            <button type="button" @click="deleteContent(todo.id)"
-              class="text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 shadow-lg shadow-green-500/50 dark:shadow-lg dark:shadow-green-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">Remove</button>
-          </v-col>
-        </v-card>
-      </div>
-    </div> -->
 
     <div class="grid h-screen place-items-center">
 

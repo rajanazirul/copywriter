@@ -1,11 +1,13 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import Category from '@/components/Category.vue'
 import { useCopywritingStore } from '@/stores/copywriting'
 import useClipboard from 'vue-clipboard3'
+import { useCategoryStore } from '@/stores/category'
 import Header from '@/views/Header.vue'
 
 const copywritingStore = useCopywritingStore()
+const categoryStore = useCategoryStore()
 
 const content = ref('')
 
@@ -23,6 +25,10 @@ const copy = async () => {
 onMounted(() => {
     copywritingStore.getCopywrite()
 })
+
+watch(() => categoryStore.category, () => {
+    copywritingStore.getCopywrite()
+}, { immediate: true });
 </script>
 
 <template>

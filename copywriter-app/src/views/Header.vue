@@ -6,14 +6,14 @@ import { RouterLink } from 'vue-router'
 <template>
     <nav>
         <div>
-            <v-btn>
+            <v-btn class="my-2">
                 <RouterLink to="/" class="text-black">
                     Home
                 </RouterLink>
             </v-btn>
         </div>
         <div>
-            <v-btn>
+            <v-btn class="my-2">
                 <RouterLink to="/copywriting" class="text-black">
                     Pilihan Ayat copywriting
                 </RouterLink>
