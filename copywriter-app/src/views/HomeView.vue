@@ -21,11 +21,10 @@ const actionStore = useActionsStore()
 const categoryStore = useCategoryStore()
 
 const dialog = ref(false)
-const group = ref()
-const groupSelect = ref([])
-const category = ref()
-const categorySelect = ref(['test'])
-
+const resetAttention = () => {cwStore.attention = ''}
+const resetInterest = () => {cwStore.interest = ''}
+const resetDesire = () => {cwStore.desire = ''}
+const resetAction = () => {cwStore.action = ''}
 
 // ATTENTIONS
 const initialState = {
@@ -53,11 +52,10 @@ const addAttentionContent = () => {
   addDoc(attentionsCollectionRef, {
     content: cwStore.attention,
     group: cwStore.group,
-    category: cwStore.group,
+    category: categoryStore.category,
     user: cwStore.user,
     date: Date.now()
   })
-  cwStore.attention = ''
   dialog.value = true
 }
 
@@ -87,11 +85,10 @@ const addInterestsContent = () => {
   addDoc(interestsCollectionRef, {
     content: cwStore.interest,
     group: cwStore.group,
-    category: cwStore.group,
+    category: categoryStore.category,
     user: cwStore.user,
     date: Date.now()
   })
-  cwStore.interest = ''
   dialog.value = true
 }
 
@@ -122,11 +119,10 @@ const addDesiresContent = () => {
   addDoc(desiresCollectionRef, {
     content: cwStore.desire,
     group: cwStore.group,
-    category: cwStore.group,
+    category: categoryStore.category,
     user: cwStore.user,
     date: Date.now()
   })
-  cwStore.desire = ''
   dialog.value = true
 }
 
@@ -156,11 +152,10 @@ const addActionsContent = () => {
   addDoc(actionsCollectionRef, {
     content: cwStore.action,
     group: cwStore.group,
-    category: cwStore.group,
+    category: categoryStore.category,
     user: cwStore.user,
     date: Date.now()
   })
-  cwStore.action = ''
   dialog.value = true
 }
 
@@ -169,6 +164,11 @@ watch(() => categoryStore.category, () => {
   interestStore.getInterests()
   desireStore.getDesires()
   actionStore.getActions()
+  cwStore.attention = ''
+  cwStore.interest = ''
+  cwStore.desire = ''
+  cwStore.action = ''
+
 }, { immediate: true });
 
 
@@ -203,7 +203,7 @@ watch(() => categoryStore.category, () => {
         </v-btn>
         <v-btn
           class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-red-700 rounded-lg focus:ring-4 focus:ring-red-200 dark:focus:ring-red-900 hover:bg-red-800"
-          @click="">
+          @click="resetAttention">
           Kosongkan
         </v-btn>
       </form>
@@ -225,7 +225,7 @@ watch(() => categoryStore.category, () => {
         </v-btn>
         <v-btn
           class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-red-700 rounded-lg focus:ring-4 focus:ring-red-200 dark:focus:ring-red-900 hover:bg-red-800"
-          @click="">
+          @click="resetInterest">
           Kosongkan
         </v-btn>
       </form>
@@ -247,7 +247,7 @@ watch(() => categoryStore.category, () => {
         </v-btn>
         <v-btn
           class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-red-700 rounded-lg focus:ring-4 focus:ring-red-200 dark:focus:ring-red-900 hover:bg-red-800"
-          @click="">
+          @click="resetDesire">
           Kosongkan
         </v-btn>
       </form>
@@ -269,7 +269,7 @@ watch(() => categoryStore.category, () => {
         </v-btn>
         <v-btn
           class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-red-700 rounded-lg focus:ring-4 focus:ring-red-200 dark:focus:ring-red-900 hover:bg-red-800"
-          @click="">
+          @click="resetAction">
           Kosongkan
         </v-btn>
       </form>
