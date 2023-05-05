@@ -62,29 +62,19 @@ const addCopywriteContent = () => {
     </div>
 
     <!-- Dialog success -->
-    <v-dialog
-        transition="dialog-bottom-transition"
-        width="auto"
-        v-model="dialog1"
-      >
-        <template v-slot:default="{ isActive }">
-          <v-card>
-            <v-toolbar
-              color="primary"
-              title="Berjaya!"
-            ></v-toolbar>
-            <v-card-text>
-              <div class="text-h2 pa-12">Ayat berjaya disimpan!</div>
-            </v-card-text>
-            <v-card-actions class="justify-end">
-              <v-btn
-                variant="text"
-                @click="isActive.value = false"
-              >Tutup</v-btn>
-            </v-card-actions>
-          </v-card>
-        </template>
-      </v-dialog>
+    <v-dialog transition="dialog-bottom-transition" width="auto" v-model="dialog1">
+      <template v-slot:default="{ isActive }">
+        <v-card>
+          <v-toolbar color="primary" title="Berjaya!"></v-toolbar>
+          <v-card-text>
+            <div class="text-h2 pa-12">Ayat berjaya disimpan!</div>
+          </v-card-text>
+          <v-card-actions class="justify-end">
+            <v-btn variant="text" @click="isActive.value = false">Tutup</v-btn>
+          </v-card-actions>
+        </v-card>
+      </template>
+    </v-dialog>
 
     <div class="grid h-screen place-items-center">
 

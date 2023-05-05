@@ -183,8 +183,8 @@ watch(() => categoryStore.category, () => {
 
       <DigitalClock />
 
-      <v-text-field v-model="cwStore.user" label="Pengguna" required @input="v$.user.$touch"
-        @blur="v$.user.$touch" variant="outlined"></v-text-field>
+      <v-text-field v-model="cwStore.user" label="Pengguna" required @input="v$.user.$touch" @blur="v$.user.$touch"
+        variant="outlined"></v-text-field>
 
       <v-text-field v-model="cwStore.group" label="Nama Kumpulan" required @input="v$.group.$touch"
         @blur="v$.group.$touch" variant="outlined"></v-text-field>
