@@ -4,11 +4,19 @@ import Header from '@/views/Header.vue'
 import { db } from '@/firebase'
 import { collection, deleteDoc, doc, query, onSnapshot, addDoc } from 'firebase/firestore'
 
+interface FormData {
+  category: category;
+}
+
+interface category {
+  category: string;
+  id: string;
+}
 
 const categoriesCollectionRef = collection(db, 'categories')
 const categoriesCollectionQuery = query(categoriesCollectionRef)
 
-const categories = ref([])
+const categories = ref<FormData>()
 
 const newCategory = ref()
 
