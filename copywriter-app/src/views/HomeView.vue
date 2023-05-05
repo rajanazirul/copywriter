@@ -1,12 +1,18 @@
 <script setup lang="ts">
-import { ref, reactive, onMounted, watchEffect } from 'vue';
+import { ref, reactive, onMounted, watch } from 'vue';
 import { db } from '@/firebase'
 import { useVuelidate } from '@vuelidate/core'
 import { required, helpers } from '@vuelidate/validators'
 import { collection, addDoc, query, orderBy, limit, onSnapshot } from 'firebase/firestore'
 import { useCopywritingStore } from '@/stores/copywriting'
+import { useAttentionsStore } from '@/stores/attentions'
+import { useCategoryStore } from '@/stores/category';
+import Category from '@/components/Category.vue'
+
 
 const cwStore = useCopywritingStore()
+const attentionStore = useAttentionsStore()
+const categoryStore = useCategoryStore()
 
 const dialog = ref(false)
 const group = ref()
@@ -16,8 +22,6 @@ const categorySelect = ref(['test'])
 
 
 // ATTENTIONS
-const attentionSelect = ref([])
-
 const initialState = {
   content: '',
   group: null,
@@ -166,35 +170,34 @@ const desiresCollectionQuery = query(desiresCollectionRef, orderBy('date', 'desc
 const actionsCollectionQuery = query(actionsCollectionRef, orderBy('date', 'desc'), limit(9))
 
 onMounted(() => {
-  onSnapshot(attentionsCollectionQuery, (querySnapshot) => {
-    const fbattentions: any= []
-    querySnapshot.forEach((doc) => {
-      fbattentions.push(doc.data().content)
+    onSnapshot(interestsCollectionQuery, (querySnapshot) => {
+      const fbattentions: any = []
+      querySnapshot.forEach((doc) => {
+        fbattentions.push(doc.data().content)
+      })
+      interestSelect.value = fbattentions
+    }),
+    onSnapshot(desiresCollectionQuery, (querySnapshot) => {
+      const fbattentions: any = []
+      querySnapshot.forEach((doc) => {
+        fbattentions.push(doc.data().content)
+      })
+      desireSelect.value = fbattentions
+    }),
+    onSnapshot(actionsCollectionQuery, (querySnapshot) => {
+      const fbattentions: any = []
+      querySnapshot.forEach((doc) => {
+        fbattentions.push(doc.data().content)
+      })
+      actionSelect.value = fbattentions
     })
-    attentionSelect.value = fbattentions
-  }),
-  onSnapshot(interestsCollectionQuery, (querySnapshot) => {
-    const fbattentions: any = []
-    querySnapshot.forEach((doc) => {
-      fbattentions.push(doc.data().content)
-    })
-    interestSelect.value = fbattentions
-  }),
-  onSnapshot(desiresCollectionQuery, (querySnapshot) => {
-    const fbattentions: any = []
-    querySnapshot.forEach((doc) => {
-      fbattentions.push(doc.data().content)
-    })
-    desireSelect.value = fbattentions
-  }),
-  onSnapshot(actionsCollectionQuery, (querySnapshot) => {
-    const fbattentions: any = []
-    querySnapshot.forEach((doc) => {
-      fbattentions.push(doc.data().content)
-    })
-    actionSelect.value = fbattentions
-  })
 })
+
+watch(() => categoryStore.category, () => {
+  console.log(categoryStore.category)
+  attentionStore.getAttentions()
+}, { immediate: true });
+
 
 </script>
 
@@ -208,12 +211,11 @@ onMounted(() => {
       <v-text-field v-model="cwStore.group" label="Nama Kumpulan" required @input="v$.group.$touch"
         @blur="v$.group.$touch"></v-text-field>
 
-      <v-autocomplete v-model="cwStore.category" label="Kategori Jualan"
-        :items="categorySelect"></v-autocomplete>
+      <Category />
 
       <form @submit.prevent="addAttentionContent">
         <v-card width="600" title="A - ATTENTION [PERHATIAN]" subtitle="(Ayat menangkap minat pembaca)">
-          <v-select v-model="cwStore.attention" :items="attentionSelect" label="Pilihan Ayat"></v-select>
+          <v-select v-model="cwStore.attention" :items="attentionStore.attentionContent" label="Pilihan Ayat"></v-select>
           <textarea id="message" rows="4" v-model="cwStore.attention"
             :error-messages="v$.content.$errors.map(e => e.$message)" required @input="v$.content.$touch"
             @blur="v$.content.$touch"
@@ -302,29 +304,19 @@ onMounted(() => {
     </div>
 
     <!-- Dialog success -->
-    <v-dialog
-        transition="dialog-bottom-transition"
-        width="auto"
-        v-model="dialog"
-      >
-        <template v-slot:default="{ isActive }">
-          <v-card>
-            <v-toolbar
-              color="primary"
-              title="Berjaya!"
-            ></v-toolbar>
-            <v-card-text>
-              <div class="text-h2 pa-12">Ayat berjaya disimpan!</div>
-            </v-card-text>
-            <v-card-actions class="justify-end">
-              <v-btn
-                variant="text"
-                @click="isActive.value = false"
-              >Tutup</v-btn>
-            </v-card-actions>
-          </v-card>
-        </template>
-      </v-dialog>
+    <v-dialog transition="dialog-bottom-transition" width="auto" v-model="dialog">
+      <template v-slot:default="{ isActive }">
+        <v-card>
+          <v-toolbar color="primary" title="Berjaya!"></v-toolbar>
+          <v-card-text>
+            <div class="text-h2 pa-12">Ayat berjaya disimpan!</div>
+          </v-card-text>
+          <v-card-actions class="justify-end">
+            <v-btn variant="text" @click="isActive.value = false">Tutup</v-btn>
+          </v-card-actions>
+        </v-card>
+      </template>
+    </v-dialog>
 
   </main>
 </template>

@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { db } from '@/firebase'
-import { collection, onSnapshot, query, orderBy, limit } from 'firebase/firestore'
+import { collection, onSnapshot, query, where } from 'firebase/firestore'
+import { useCategoryStore } from '@/stores/category'
 
 export const useAttentionsStore = defineStore({
   id: 'attentions',
@@ -18,8 +19,9 @@ export const useAttentionsStore = defineStore({
   },
   actions: {
     getAttentions() {
+      const categoryStore = useCategoryStore()
       const attentionsCollectionRef = collection(db, 'attentions')
-      const attentionsCollectionQuery = query(attentionsCollectionRef, orderBy('date', 'desc'), limit(9))
+      const attentionsCollectionQuery = query(attentionsCollectionRef, where("category", "==", categoryStore.category))
 
       onSnapshot(attentionsCollectionQuery, (querySnapshot) => {
         const fbattentions: any = []
