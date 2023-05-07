@@ -26,6 +26,13 @@ import { RouterLink } from 'vue-router'
                 </RouterLink>
             </v-btn>
         </div>
+        <div>
+            <v-btn class="my-2">
+                <RouterLink to="/lihat-data" class="text-black">
+                    Database
+                </RouterLink>
+            </v-btn>
+        </div>
     </nav>
 </template>
 
