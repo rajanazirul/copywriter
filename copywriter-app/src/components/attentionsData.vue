@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import Header from '@/views/Header.vue'
 import { db } from '@/firebase'
 import { collection, deleteDoc, doc, query, onSnapshot, addDoc } from 'firebase/firestore'
 
@@ -49,10 +48,6 @@ onMounted(() => {
 
 <template>
     <div>
-        <div class="py-7">
-            <Header />
-        </div>
-
         <v-card color="#385F73" theme="dark">
             <v-card-title class="text-h5">
                 A- Attention (Perhatian)
