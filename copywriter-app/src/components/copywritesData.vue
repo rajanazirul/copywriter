@@ -64,7 +64,16 @@ onMounted(() => {
             </thead>
             <tbody>
                 <tr v-for="copywrite in copywrites" :key="copywrite.id">
-                    <td>{{ copywrite.content }}</td>
+                    <td>
+                        <div
+                            class="w-full mb-4 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
+                            <div class="px-4 py-2 bg-white rounded-t-lg dark:bg-gray-800">
+                                <label class="sr-only">Ayat copywriting</label>
+                                <textarea v-model="copywrite.content"
+                                    class="px-0 text-sm text-gray-900 bg-white border-0 dark:bg-gray-800 focus:ring-0 dark:text-white dark:placeholder-gray-400 h-96" disabled></textarea>
+                            </div>
+                        </div>
+                    </td>
                     <td>{{ copywrite.group }}</td>
                     <td>{{ copywrite.category }}</td>
                     <td>{{ copywrite.user }}</td>
