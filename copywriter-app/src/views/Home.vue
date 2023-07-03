@@ -1,16 +1,11 @@
 <script setup lang="ts">
 import ContentView from '@/views/ContentView.vue'
-import Header from '@/views/Header.vue'
 import CopywriteView from '@/views/CopywriteView.vue'
 </script>
 
 <template>
     <div class="home">
         <div>
-            <div>
-                <Header />
-            </div>
-
             <ContentView />
         </div>
 

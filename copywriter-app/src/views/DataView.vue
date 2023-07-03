@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import Header from '@/views/Header.vue'
 import attentionsData from '@/components/attentionsData.vue';
 import interestsData from '@/components/interestsData.vue';
 import desiresData from '@/components/desiresData.vue';
@@ -11,9 +10,7 @@ const dataView = ref('attention')
 </script>
 
 <template>
-    <div class="py-7">
-        <Header />
-    </div>
+   
     <button @click="() => { dataView = 'attention' }"
         class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded mx-3 my-2">
         Attention Data

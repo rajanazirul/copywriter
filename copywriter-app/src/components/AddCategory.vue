@@ -51,9 +51,6 @@ onMounted(() => {
 
 <template>
     <div>
-        <div class="py-7">
-            <Header />
-        </div>
 
         <div class="columns py-5">
             <v-form @submit.prevent="addTodo">

@@ -4,7 +4,6 @@ import Category from '@/components/Category.vue'
 import { useCopywritingStore } from '@/stores/copywriting'
 import useClipboard from 'vue-clipboard3'
 import { useCategoryStore } from '@/stores/category'
-import Header from '@/views/Header.vue'
 
 const copywritingStore = useCopywritingStore()
 const categoryStore = useCategoryStore()
@@ -33,9 +32,6 @@ watch(() => categoryStore.category, () => {
 
 <template>
     <div>
-        <div class="py-7">
-            <Header />
-        </div>
         <div>
             <div>
                 <Category />
